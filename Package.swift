@@ -5,20 +5,34 @@ import PackageDescription
 
 let package = Package(
     name: "SignInGoogleAsync",
+    platforms: [
+        .iOS(.v13),
+        .macOS(.v12)
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "SignInGoogleAsync",
             targets: ["SignInGoogleAsync"]),
     ],
+    dependencies: [
+        // Dependencies declare other packages that this package depends on.
+        .package(url: "https://github.com/google/GoogleSignIn-iOS.git", from: "8.0.0"),
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "SignInGoogleAsync"),
+            name: "SignInGoogleAsync",
+            dependencies: [
+                .product(name: "GoogleSignIn", package: "GoogleSignIn-iOS")
+//                .product(name: "GoogleSignInSwift", package: "GoogleSignIn-iOS")
+            ]
+        ),
         .testTarget(
             name: "SignInGoogleAsyncTests",
             dependencies: ["SignInGoogleAsync"]
         ),
     ]
 )
+
