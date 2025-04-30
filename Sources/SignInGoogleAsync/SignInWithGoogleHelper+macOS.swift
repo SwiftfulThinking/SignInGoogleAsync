@@ -1,6 +1,15 @@
+//
+//  SignInWithGoogleHelper+macOS.swift
+//  SignInGoogleAsync
+//
+//  Created by Valentine Zubkov on 30.04.2025.
+//
+
+#if os(macOS)
+
 import Foundation
 import SwiftUI
-import UIKit
+import AppKit
 @preconcurrency import GoogleSignIn
 
 public final class SignInWithGoogleHelper {
@@ -11,12 +20,12 @@ public final class SignInWithGoogleHelper {
     }
         
     @MainActor
-    public func signIn(viewController: UIViewController? = nil) async throws -> GoogleSignInResult {
-        guard let topViewController = viewController ?? UIApplication.topViewController() else {
+    public func signIn(viewController: NSViewController? = nil) async throws -> GoogleSignInResult {
+        guard let topWindow = viewController?.view.window ?? NSApplication.topWindow() else {
             throw GoogleSignInError.noViewController
         }
                 
-        let gidSignInResult = try await GIDSignIn.sharedInstance.signIn(withPresenting: topViewController)
+        let gidSignInResult = try await GIDSignIn.sharedInstance.signIn(withPresenting: topWindow)
         
         guard let result = GoogleSignInResult(result: gidSignInResult) else {
             throw GoogleSignInError.badResponse
@@ -26,16 +35,18 @@ public final class SignInWithGoogleHelper {
     }
     
     private enum GoogleSignInError: LocalizedError {
-        case noViewController
+        case noViewController  // Keep the same name as iOS for consistency
         case badResponse
         
         var errorDescription: String? {
             switch self {
             case .noViewController:
-                return "Could not find top view controller."
+                return "Could not find window to present sign in."
             case .badResponse:
                 return "Google Sign In had a bad response."
             }
         }
     }
 }
+
+#endif

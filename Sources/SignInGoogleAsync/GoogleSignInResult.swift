@@ -1,6 +1,5 @@
 import Foundation
 import SwiftUI
-import UIKit
 @preconcurrency import GoogleSignIn
 
 public struct GoogleSignInResult {
